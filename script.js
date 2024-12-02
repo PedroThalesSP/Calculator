@@ -2,7 +2,7 @@ const result = document.querySelector(".result");
 const buttons = document.querySelectorAll(".buttons button");
 
 let currentNumber = "";
-let firtOperand = null;
+let firstOperand = null;
 let operator = null;
 let restart = false;
 
@@ -11,11 +11,11 @@ function updateResult(originClear = false){
 }
 
 function addDigit(digit){
-    if (digit === "," && (currentNumber.includes(",") || !correntNumber)) return;
+    if (digit === "," && (currentNumber.includes(",") || !currentNumber)) return;
 
 
 if (restart) {
-    correntNumber = digit;
+    currentNumber = digit;
     restart = false;
 } else {
     currentNumber += digit;
@@ -25,46 +25,46 @@ updateResult();
 }
 
 function setOperator(newOperator){
-    if (correntNumber) {
+    if (currentNumber) {
         calculate();
 
-        firstOperand = parseFloat (correntNumber.replace (",","."));
-        correntNumber="";
+        firstOperand = parseFloat( currentNumber.replace (",","."));
+        currentNumber="";
     }
     operator = newOperator;
 }
 
 function calculate () {
-    if (operator === null || (firtOperand === null)) return;
-    let secondOperand = perseFloat(correntNumber.replace ("," ,"."));
+    if ( operator === null || firstOperand === null) return;
+    let secondOperand = parseFloat (currentNumber.replace ("," ,"."));
     let resultValue;
 
     switch (operator) {
         case "+":
-            resultValue = firtOperand + secondOperand;
+            resultValue = firstOperand + secondOperand;
             break;
         case "-":
-            resultValue = firtOperand - secondOperand;
+            resultValue = firstOperand - secondOperand;
             break;
         case "x": 
-        resultValue = firtOperand * secondOperand;
+        resultValue = firstOperand * secondOperand;
             break;
         case "÷":
-        resultValue = firtOperand / secondOperand;
+            resultValue = firstOperand / secondOperand;
             break;
             default:
         return;
     }
-    if (resultValue.tostring().split(".")[1]?.lenght > 5){
-        correntNumber = parseFloat(resultValue.toFixes(5)).toString();
+    if (resultValue.toString().split(".")[1]?.lenght > 5){
+        currentNumber = parseFloat(resultValue.toFixed(5)).toString();
     } else {
-        correntNumber = resultValue.toString();
+        currentNumber = resultValue.toString();
     }
 
     operator = null;
-    firtOperand = null;
+    firstOperand = null;
     restart = true;
-    percentaValue = null;
+    percentageValue = null;
     updateResult();
 
 }
@@ -72,7 +72,7 @@ function calculate () {
 
 function clearCalculator(){
     currentNumber = "";
-    firtOperand = null;
+    firstOperand = null;
     operator = null;
     updateResult(true);
 }
@@ -86,7 +86,7 @@ function setPercentage(){
     if (result.toString().splint(".")[1]?. lenght > 5){
         result = result.toFixed(5).toString();
     }
-    correntNumber = result.toString();
+    currentNumber = result.toString();
     updateResult();
 }
 
@@ -94,7 +94,7 @@ buttons.forEach((button) => {
     button.addEventListener("click", () =>{
     const buttonText = button.innerText;
     if (/^[0-9,]+$/.test(buttonText)){
-        addDigit(buttonText)
+        addDigit(buttonText);
     } else if (["+","-","x","÷"].includes(buttonText)){
         setOperator(buttonText);
     } else if (buttonText === "="){
@@ -103,7 +103,7 @@ buttons.forEach((button) => {
         clearCalculator();
     } else if (buttonText === "±"){
         currentNumber = (
-            parseFloat(currentNumber || firtOperand) * -1 
+            parseFloat(currentNumber || firstOperand) * -1 
         ) . toString ();
         updateResult();
     }else if (buttonText === "%"){
